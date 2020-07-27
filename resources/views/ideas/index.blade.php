@@ -59,12 +59,12 @@
         // var_dump($attribute_array);
         ?>
         @foreach($attribute_array as $abute)
-        <p>{{ $abute }} &nbsp;</p>
+        {{ $abute }} &nbsp;
         @endforeach
         </td>
         <td align="center">{{ $regions[$idea->region] }}</td>
-        <td align="center">{{ $idea->size }}cm</td>
-        <td align="center">{{ $idea->weight }}kg</td>
+        <td align="center">{{ $idea->size }} m</td>
+        <td align="center">{{ $idea->weight }} kg</td>
         {{-- <td align="center">{{ $idea->attack_name }}</td>
         <td align="center">{{ $idea->attack_description }}</td> --}}
         <td><button type="button" onclick="location.href='ideas/{{ $idea->id }}'">見る</button></td>

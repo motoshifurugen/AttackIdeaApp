@@ -21,6 +21,7 @@ class IdeaController extends Controller
     {
         $user_id = Auth::id(); // ログインユーザIDを取得する
         $user = Auth::user();
+        $attacks = Attack::all();
         $query = DB::table('ideas')->where('user_id', $user_id);
         $count = $query->count();
 
@@ -37,7 +38,7 @@ class IdeaController extends Controller
         $ideas = $query->orderBy('created_at', 'desc')->paginate(10);
         $performance = $this->calcPerformance($ideas);
 
-        return view('ideas.index', compact('ideas'), ['attributes'=>$this->ATTRIBUTES, 'regions'=>$this->REGIONS, 'pf'=>$performance, 'user'=>$user, 'count'=>$count]);
+        return view('ideas.index', compact('ideas'), ['attributes'=>$this->ATTRIBUTES, 'regions'=>$this->REGIONS, 'pf'=>$performance, 'user'=>$user, 'count'=>$count, 'attacks'=>$attacks]);
     }
 
     public function calcPerformance($ideas){
@@ -59,7 +60,8 @@ class IdeaController extends Controller
      */
     public function create()
     {
-        //
+        $attacks = Attack::all();
+        return view('ideas.create', ['attributes'=>$this->ATTRIBUTES, 'regions'=>$this->REGIONS, 'attacks'=>$attacks]);
     }
 
     /**
@@ -70,7 +72,33 @@ class IdeaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $idea = new Idea();
+        var_dump($idea->id);
+        $idea->user_id = Auth::id();
+        $idea->monster_name = request('monster_name');
+        $attribute_array = implode(",", request('attribute'));
+        $idea->attribute = $attribute_array;
+        $idea->region = request('region');
+        $idea->size = request('size');
+        $idea->weight = request('weight');
+
+        if()
+        $attack = new Attack();
+        var_dump($attack->id);
+        $attack->attack_name = request('attack_name');
+        $attack->attack_description = request('attack_description');
+
+        $idea->save();
+        $attack->save();
+
+        $idea_id = $idea->id;
+        $attack_id = $attack->id;
+        $idea->attacks()->attach(
+            ['idea_id' => $idea_id],
+            ['attack_id' => $attack_id],
+        );
+
+        return redirect('ideas');
     }
 
     /**
